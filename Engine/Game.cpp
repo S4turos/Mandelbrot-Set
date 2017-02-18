@@ -25,11 +25,16 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	rng(std::random_device()()),
+	rgb(0,255)
 {
+	const float CellWidth = float(Graphics::ScreenWidth) / float(gridsX);
+	const float CellHeight = float(Graphics::ScreenHeight) / float(gridsY);
 	for (int x = 0; x < gridsX; x++) {
 		for (int y = 0; y < gridsY; y++) {
-			matrix[x][y] = new Matrix({ 4,4 }, {4,4});
+			matrix[x][y] = Matrix({ x * CellWidth, y * CellHeight },
+			{x * CellWidth + CellWidth, y * CellHeight + CellHeight});
 		}
 	}
 }
@@ -48,4 +53,10 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	for (int x = 0; x < gridsX; x++) {
+		for (int y = 0; y < gridsY; y++) {
+			Color c(rgb(rng), rgb(rng), rgb(rng));
+			matrix[x][y].DrawCell(gfx, c);
+		}
+	}
 }

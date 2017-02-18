@@ -20,12 +20,18 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "Vec2.h"
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd )
 {
+	for (int x = 0; x < gridsX; x++) {
+		for (int y = 0; y < gridsY; y++) {
+			matrix[x][y] = new Matrix({ 4,4 }, {4,4});
+		}
+	}
 }
 
 void Game::Go()

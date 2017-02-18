@@ -23,6 +23,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
+#include "Matrix.h"
 
 class Game
 {
@@ -42,5 +43,8 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	static constexpr int gridsX = 81;
+	static constexpr int gridsY = 81;
+	Matrix matrix[gridsX][gridsY];
 	/********************************/
 };

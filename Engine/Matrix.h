@@ -15,7 +15,7 @@ private:
 	Vec2 c;
 	Color color;
 public:
-	static constexpr int gridsX = 180;
-	static constexpr int gridsY = 180;
+	static constexpr int gridsX = 187;
+	static constexpr int gridsY = 187;
 	static constexpr int grids = gridsX * gridsY;
 };

@@ -35,8 +35,6 @@ Game::Game( MainWindow& wnd )
 	int halfY = (Matrix::gridsY - 1) / 2;
 	float scalerX = (Matrix::gridsX - 1) / 4.0f;
 	float scalerY = (Matrix::gridsY - 1) / 4.0f;
-	//Color pass[10] = {Colors::Red, Colors::Green, Colors::Blue, Colors::Cyan, Colors::Gray, Colors::LightGray,
-	//Colors::Magenta, Colors::White, Colors::Yellow, Colors::Black};
 	float dif = 255.0f / float(limit);
 	for (int i = 0; i < Matrix::grids; i++) {
 		int x = i % Matrix::gridsX;
@@ -44,7 +42,28 @@ Game::Game( MainWindow& wnd )
 		Vec2 c(float(x - halfX) / scalerX, -float(y - halfY) / scalerY);
 		int p = 0;
 		Vec2 iteration(0.0f, 0.0f);
-		Color pass;
+		Color pass[20] = {
+			{5,7,103},
+			{17,57,151},
+			{21, 100, 147},
+			{32,125,136},
+			{31,137,87},
+			{46,138,30},
+			{131,147,21},
+			{204,215,6},
+			{217,153,4},
+			{220,105,1},
+			{221, 66, 0},
+			{187, 37, 0},
+			{187, 0, 0},
+			{210, 0, 0},
+			{255, 0, 0},
+			{190,0,0},
+			{140,0,0},
+			{90, 0, 0},
+			{45,0,0},
+			{0,0,0}
+		};
 		while (true) {
 			// Aquí debes hacer todos los cálculos para cada casilla
 			// p es cada pass
@@ -53,14 +72,13 @@ Game::Game( MainWindow& wnd )
 			iteration.x = xnew;
 			float result = iteration.x * iteration.x + iteration.y * iteration.y;
 			if (result >= 4.0f || p == limit - 1) {
-				pass = Color(int(255 - dif * p), int(255 - dif * p), int(255 - dif * p));
 				break;
 			}
 			p++;
 		}
 
 		matrix[i] = Matrix({ x * CellWidth, y * CellHeight },
-		{ x * CellWidth + CellWidth, y * CellHeight + CellHeight }, c, pass);
+		{ x * CellWidth + CellWidth, y * CellHeight + CellHeight }, c, pass[p]);
 	}
 	
 }

@@ -47,6 +47,6 @@ private:
 	std::mt19937 rng;
 	std::uniform_int_distribution<int> rgb;
 	Matrix matrix[Matrix::grids];
-	const int limit = 50;
+	const int limit = 20;
 	/********************************/
 };

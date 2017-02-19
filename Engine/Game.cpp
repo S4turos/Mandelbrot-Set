@@ -25,62 +25,8 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd ),
-	rng(std::random_device()()),
-	rgb(0,255)
-{
-	const float CellWidth = float(Graphics::ScreenWidth) / float(Matrix::gridsX);
-	const float CellHeight = float(Graphics::ScreenHeight) / float(Matrix::gridsY);
-	int halfX = (Matrix::gridsX - 1) / 2;
-	int halfY = (Matrix::gridsY - 1) / 2;
-	float scalerX = (Matrix::gridsX - 1) / 4.0f;
-	float scalerY = (Matrix::gridsY - 1) / 4.0f;
-	float dif = 255.0f / float(limit);
-	for (int i = 0; i < Matrix::grids; i++) {
-		int x = i % Matrix::gridsX;
-		int y = i / Matrix::gridsY;
-		Vec2 c(float(x - halfX) / scalerX, -float(y - halfY) / scalerY);
-		int p = 0;
-		Vec2 iteration(0.0f, 0.0f);
-		Color pass[20] = {
-			{5,7,103},
-			{17,57,151},
-			{21, 100, 147},
-			{32,125,136},
-			{31,137,87},
-			{46,138,30},
-			{131,147,21},
-			{204,215,6},
-			{217,153,4},
-			{220,105,1},
-			{221, 66, 0},
-			{187, 37, 0},
-			{187, 0, 0},
-			{210, 0, 0},
-			{255, 0, 0},
-			{190,0,0},
-			{140,0,0},
-			{90, 0, 0},
-			{45,0,0},
-			{0,0,0}
-		};
-		while (true) {
-			// Aquí debes hacer todos los cálculos para cada casilla
-			// p es cada pass
-			float xnew = iteration.x * iteration.x - iteration.y * iteration.y + c.x;
-			iteration.y = 2 * iteration.x * iteration.y + c.y;
-			iteration.x = xnew;
-			float result = iteration.x * iteration.x + iteration.y * iteration.y;
-			if (result >= 4.0f || p == limit - 1) {
-				break;
-			}
-			p++;
-		}
-
-		matrix[i] = Matrix({ x * CellWidth, y * CellHeight },
-		{ x * CellWidth + CellWidth, y * CellHeight + CellHeight }, c, pass[p]);
-	}
-	
+	gfx( wnd )
+{	
 }
 
 void Game::Go()
@@ -97,7 +43,26 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	for (Matrix& m : matrix) {
-		m.DrawCell(gfx);
+	for (int i = 0; i < Matrix::grids; i++) {
+		int x = i % Matrix::gridsX;
+		int y = i / Matrix::gridsY;
+		Vec2 c(double(x - halfX) / scalerX, -double(y - halfY) / scalerY);
+		int p = 0;
+		Vec2 iteration(0.0f, 0.0f);
+		while (true) {
+			// Aquí debes hacer todos los cálculos para cada casilla
+			// p es cada pass
+			double xnew = iteration.x * iteration.x - iteration.y * iteration.y + c.x;
+			iteration.y = 2 * iteration.x * iteration.y + c.y;
+			iteration.x = xnew;
+			double result = iteration.x * iteration.x + iteration.y * iteration.y;
+			if (result >= 4.0f || p == limit - 1) {
+				break;
+			}
+			p++;
+		}
+
+		Matrix::DrawCell({ x * CellWidth, y * CellHeight },
+		{ x * CellWidth + CellWidth, y * CellHeight + CellHeight }, gfx, pass[p]);
 	}
 }

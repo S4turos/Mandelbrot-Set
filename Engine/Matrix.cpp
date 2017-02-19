@@ -9,7 +9,7 @@ Matrix::Matrix(const Vec2 & topleft, const Vec2 & bottomright, const Vec2& c, Co
 {
 }
 
-void Matrix::DrawCell(Graphics & gfx) const
+void Matrix::DrawCell(const Vec2 & topleft, const Vec2 & bottomright, Graphics & gfx, Color color)
 {
 	gfx.DrawRect(topleft, bottomright, color);
 }

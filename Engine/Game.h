@@ -45,7 +45,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Matrix matrix;
-	const int limit = 20;
+	static constexpr int limit = 100;
 	/********************************/
 	const double CellWidth = double(Graphics::ScreenWidth) / double(Matrix::gridsX);
 	const double CellHeight = double(Graphics::ScreenHeight) / double(Matrix::gridsY);
@@ -54,26 +54,5 @@ private:
 	const double scalerX = (Matrix::gridsX - 1) / 4.0f;
 	const double scalerY = (Matrix::gridsY - 1) / 4.0f;
 	const double dif = 255.0f / double(limit);
-	Color pass[20] = {
-		{ 5,7,103 },
-		{ 17,57,151 },
-		{ 21, 100, 147 },
-		{ 32,125,136 },
-		{ 31,137,87 },
-		{ 46,138,30 },
-		{ 131,147,21 },
-		{ 204,215,6 },
-		{ 217,153,4 },
-		{ 220,105,1 },
-		{ 221, 66, 0 },
-		{ 187, 37, 0 },
-		{ 187, 0, 0 },
-		{ 210, 0, 0 },
-		{ 255, 0, 0 },
-		{ 190,0,0 },
-		{ 140,0,0 },
-		{ 90, 0, 0 },
-		{ 45,0,0 },
-		{ 0,0,0 }
-	};
+	Color pass[limit];
 };

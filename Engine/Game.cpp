@@ -27,6 +27,66 @@ Game::Game( MainWindow& wnd )
 	wnd( wnd ),
 	gfx( wnd )
 {	
+	const float dif = (155.0f + 255.0f * 5.0f) / float(limit);
+	float r = 0;
+	float g = 0;
+	float b = 100; // 1 color { 0, 0, 100 }
+	int col = 0;
+	for (int i = 0; i < limit; i++) {
+		pass[i] = Color(int(r), int(g), int(b));
+		if (b <= 255 && col == 0) {
+			// 2 color { 0,0,255 }
+			b += dif;
+		}
+		if (b > 255 && col == 0) {
+			b = 255;
+			col = 1;
+			continue;
+		}
+		if (g <= 255 && col == 1) {
+			// 3 color { 0,255,255 }
+			g += dif;
+		}
+		if (g > 255 && col == 1) {
+			g = 255;
+			col = 2;
+			continue;
+		}
+		if (r <= 255 && col == 2) {
+			// 4 color { 255,255,0 }
+			r += dif;
+			b -= dif;
+		}
+		if (r > 255 && col == 2) {
+			r = 255;
+			b = 0;
+			col = 3;
+			continue;
+		}
+		if (g >= 0 && col == 3) {
+			// 5 color { 255,0,0 }
+			g -= dif;
+		}
+		if (g < 0 && col == 3) {
+			g = 0;
+			col = 4;
+			continue;
+		}
+		if (b <= 255 && col == 4) {
+			// 6 color { 255,0,255 }
+			b += dif;
+		}
+		if (b > 255 && col == 4) {
+			b = 255;
+			col = 5;
+			continue;
+		}
+		if (col == 5) {
+			r = 0;
+			g = 0;
+			b = 0;
+		}
+	}
 }
 
 void Game::Go()

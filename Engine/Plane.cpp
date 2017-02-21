@@ -1,8 +1,22 @@
 #include "Plane.h"
 
 
-
 Plane::Plane()
+{
+	CreateColors();
+}
+
+Plane::Plane(const double limitLeft, const double limitRight, const double limitTop, const double limitBottom)
+	:
+	limitLeft(limitLeft),
+	limitRight(limitRight),
+	limitTop(limitTop),
+	limitBottom(limitBottom)
+{
+	CreateColors();
+}
+
+void Plane::CreateColors()
 {
 	const float dif = (155.0f + 255.0f * 5.0f) / float(iterations);
 	float r = 0;
@@ -102,18 +116,22 @@ void Plane::DoFullIteration(Graphics & gfx) const
 
 void Plane::ZoomIn()
 {
-	limitTop -= VelZoom;
-	limitRight -= VelZoom;
-	limitLeft += VelZoom;
-	limitBottom += VelZoom;
+	const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
+	const double vel = levelzoom * speed;
+	limitTop -= vel;
+	limitRight -= vel;
+	limitLeft += vel;
+	limitBottom += vel;
 }
 
 void Plane::ZoomOut()
 {
-	limitTop += VelZoom;
-	limitRight += VelZoom;
-	limitLeft -= VelZoom;
-	limitBottom -= VelZoom;
+	const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
+	const double vel = levelzoom * speed;
+	limitTop += vel;
+	limitRight += vel;
+	limitLeft -= vel;
+	limitBottom -= vel;
 	if (limitTop > 2.0) {
 		limitTop = 2.0;
 	}
@@ -124,38 +142,54 @@ void Plane::ZoomOut()
 		limitLeft = -2.0;
 	}
 	if (limitBottom < -2.0) {
-		limitBottom = 2.0;
+		limitBottom = -2.0;
 	}
 }
 
 void Plane::Move(Keyboard & kbd)
 {
-	if (kbd.KeyIsPressed('A')) {
-		limitLeft -= VelZoom;
-		limitRight -= VelZoom;
+	if (kbd.KeyIsPressed(VK_LEFT)) {
+		const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
+		const double vel = levelzoom * speed;
+		limitLeft -= vel;
+		limitRight -= vel;
 	}
-	else if (kbd.KeyIsPressed('S')) {
-		limitTop -= VelZoom;
-		limitBottom -= VelZoom;
+	else if (kbd.KeyIsPressed(VK_RIGHT)) {
+		const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
+		const double vel = levelzoom * speed;
+		limitLeft += vel;
+		limitRight += vel;
 	}
-	else if (kbd.KeyIsPressed('D')) {
-		limitLeft += VelZoom;
-		limitRight += VelZoom;
+	if (kbd.KeyIsPressed(VK_DOWN)) {
+		const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
+		const double vel = levelzoom * speed;
+		limitTop -= vel;
+		limitBottom -= vel;
 	}
-	else if (kbd.KeyIsPressed('W')) {
-		limitTop += VelZoom;
-		limitBottom += VelZoom;
+	else if (kbd.KeyIsPressed(VK_UP)) {
+		const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
+		const double vel = levelzoom * speed;
+		limitTop += vel;
+		limitBottom += vel;
 	}
 	if (limitLeft < -2.0) {
-		limitLeft = -2.0;
+		const double dif = -limitLeft - 2.0;
+		limitLeft += dif;
+		limitRight += dif;
 	}
 	if (limitRight > 2.0) {
-		limitRight = 2.0;
+		const double dif = limitRight - 2.0;
+		limitLeft -= dif;
+		limitRight -= dif;
 	}
 	if (limitTop > 2.0) {
-		limitTop = 2.0;
+		const double dif = limitTop - 2.0;
+		limitTop -= dif;
+		limitBottom -= dif;
 	}
 	if (limitBottom < -2.0) {
-		limitBottom = -2.0;
+		const double dif = -limitBottom - 2.0;
+		limitTop += dif;
+		limitBottom += dif;
 	}
 }

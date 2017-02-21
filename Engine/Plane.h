@@ -8,18 +8,20 @@
 class Plane {
 public:
 	Plane();
+	Plane(const double limitLeft, const double limitRight, const double limitTop, const double limitBottom);
+	void CreateColors();
 	void DrawCell(const Vec2& topleft, const Vec2& bottomright, Graphics& gfx, Color color) const;
 	void DoFullIteration(Graphics& gfx) const;
 	void ZoomIn();
 	void ZoomOut();
 	void Move(Keyboard& kbd);
 private:
-	const double VelZoom = 0.1;
+	static constexpr double speed = 1.0 / 40.0;
+	static constexpr int iterations = 100;
 	double limitTop = 2.0;
 	double limitBottom = -2.0;
 	double limitLeft = -2.0;
 	double limitRight = 2.0;
-	static constexpr int iterations = 100;
 	Color colorpass[iterations];
 	static constexpr int gridsX = 800;
 	static constexpr int gridsY = 800;

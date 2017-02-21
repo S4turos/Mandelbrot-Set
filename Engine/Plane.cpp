@@ -190,6 +190,9 @@ void Plane::Move(Keyboard & kbd)
 		limitBottom = -2.0;
 		limitLeft = -2.0;
 		limitRight = 2.0;
+		speed = 1.0 / 40.0;
+		iterations = 100;
+		CreateColors();
 	}
 	if (kbd.KeyIsPressed('W')) {
 		if (speed < 1.0 / 10.0) {

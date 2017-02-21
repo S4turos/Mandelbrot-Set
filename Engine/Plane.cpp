@@ -73,15 +73,13 @@ void Plane::DrawCell(const Vec2 & topleft, const Vec2 & bottomright, Graphics & 
 
 void Plane::DoFullIteration(Graphics & gfx) const
 {
-	const int halfWidth = gridsX / 2;
-	const int halfHeight = gridsY / 2;
-	Vec2 scaler;
-	scaler.x = double(halfWidth) / limitRight;
-	scaler.y = double(halfHeight) / limitTop;
+	const double difX = (limitRight - limitLeft) / double(gridsX);
+	const double difY = (limitTop - limitBottom) / double(gridsY);
+
 	for (int i = 0; i < grids; i++) {
 		int x = i % gridsX;
 		int y = i / gridsY;
-		Vec2 c(double(x - halfWidth) / scaler.x, -double(y - halfHeight) / scaler.y);
+		Vec2 c(x * difX + limitLeft, -y * difY + limitTop);
 		int p = 0;
 		Vec2 iteration(0.0f, 0.0f);
 		while (true) {

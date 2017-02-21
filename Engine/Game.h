@@ -23,7 +23,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
-#include "Matrix.h"
+#include "Plane.h"
 #include <random>
 
 class Game
@@ -44,15 +44,6 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	Matrix matrix;
-	static constexpr int limit = 100;
+	Plane plane;
 	/********************************/
-	const double CellWidth = double(Graphics::ScreenWidth) / double(Matrix::gridsX);
-	const double CellHeight = double(Graphics::ScreenHeight) / double(Matrix::gridsY);
-	const int halfX = (Matrix::gridsX - 1) / 2;
-	const int halfY = (Matrix::gridsY - 1) / 2;
-	const double scalerX = (Matrix::gridsX - 1) / 4.0f;
-	const double scalerY = (Matrix::gridsY - 1) / 4.0f;
-	const double dif = 255.0f / double(limit);
-	Color pass[limit];
 };

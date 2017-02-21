@@ -4,6 +4,7 @@
 #include "Graphics.h"
 #include "Colors.h"
 #include "Keyboard.h"
+#include <vector>
 
 class Plane {
 public:
@@ -16,13 +17,13 @@ public:
 	void ZoomOut();
 	void Move(Keyboard& kbd);
 private:
-	static constexpr double speed = 1.0 / 40.0;
-	static constexpr int iterations = 100;
+	double speed = 1.0 / 40.0;
+	int iterations = 100;
+	std::vector<Color> colorpass;
 	double limitTop = 2.0;
 	double limitBottom = -2.0;
 	double limitLeft = -2.0;
 	double limitRight = 2.0;
-	Color colorpass[iterations];
 	static constexpr int gridsX = 800;
 	static constexpr int gridsY = 800;
 	static constexpr int grids = gridsX * gridsY;

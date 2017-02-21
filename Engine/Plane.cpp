@@ -18,13 +18,14 @@ Plane::Plane(const double limitLeft, const double limitRight, const double limit
 
 void Plane::CreateColors()
 {
+	colorpass.clear();
 	const float dif = (155.0f + 255.0f * 5.0f) / float(iterations);
 	float r = 0;
 	float g = 0;
 	float b = 100; // 1 color { 0, 0, 100 }
 	int col = 0;
 	for (int i = 0; i < iterations; i++) {
-		colorpass[i] = Color(int(r), int(g), int(b));
+		colorpass.push_back(Color(int(r), int(g), int(b)));
 		if (b <= 255 && col == 0) {
 			// 2 color { 0,0,255 }
 			b += dif;
@@ -171,6 +172,38 @@ void Plane::Move(Keyboard & kbd)
 		const double vel = levelzoom * speed;
 		limitTop += vel;
 		limitBottom += vel;
+	}
+	if (kbd.KeyIsPressed('Q')) {
+		if (iterations > 100) {
+			iterations -= 100;
+			CreateColors();
+		}
+	}
+	else if (kbd.KeyIsPressed('E')) {
+		if (iterations < 1000) {
+			iterations += 100;
+			CreateColors();
+		}
+	}
+	if (kbd.KeyIsPressed(VK_SPACE)) {
+		limitTop = 2.0;
+		limitBottom = -2.0;
+		limitLeft = -2.0;
+		limitRight = 2.0;
+	}
+	if (kbd.KeyIsPressed('W')) {
+		if (speed < 1.0 / 10.0) {
+			double denominador = 1.0 / speed;
+			denominador -= 10.0;
+			speed = 1.0 / denominador;
+		}
+	}
+	else if (kbd.KeyIsPressed('S')) {
+		if (speed > 1.0 / 100.0) {
+			double denominador = 1.0 / speed;
+			denominador += 10.0;
+			speed = 1.0 / denominador;
+		}
 	}
 	if (limitLeft < -2.0) {
 		const double dif = -limitLeft - 2.0;

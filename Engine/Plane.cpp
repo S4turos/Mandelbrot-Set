@@ -1,4 +1,5 @@
 #include "Plane.h"
+#include <assert.h>
 
 
 Plane::Plane()
@@ -19,66 +20,36 @@ Plane::Plane(const double limitLeft, const double limitRight, const double limit
 void Plane::CreateColors()
 {
 	colorpass.clear();
-	const float dif = (155.0f + 255.0f * 5.0f) / float(iterations);
-	float r = 0;
-	float g = 0;
-	float b = 100; // 1 color { 0, 0, 100 }
-	int col = 0;
-	for (int i = 0; i < iterations; i++) {
-		colorpass.push_back(Color(int(r), int(g), int(b)));
-		if (b <= 255 && col == 0) {
-			// 2 color { 0,0,255 }
-			b += dif;
-		}
-		if (b > 255 && col == 0) {
-			b = 255;
-			col = 1;
-			continue;
-		}
-		if (g <= 255 && col == 1) {
-			// 3 color { 0,255,255 }
-			g += dif;
-		}
-		if (g > 255 && col == 1) {
-			g = 255;
-			col = 2;
-			continue;
-		}
-		if (r <= 255 && col == 2) {
-			// 4 color { 255,255,0 }
-			r += dif;
-			b -= dif;
-		}
-		if (r > 255 && col == 2) {
-			r = 255;
-			b = 0;
-			col = 3;
-			continue;
-		}
-		if (g >= 0 && col == 3) {
-			// 5 color { 255,0,0 }
-			g -= dif;
-		}
-		if (g < 0 && col == 3) {
-			g = 0;
-			col = 4;
-			continue;
-		}
-		if (b <= 255 && col == 4) {
-			// 6 color { 255,0,255 }
-			b += dif;
-		}
-		if (b > 255 && col == 4) {
-			b = 255;
-			col = 5;
-			continue;
-		}
-		if (col == 5) {
-			r = 0;
-			g = 0;
-			b = 0;
+	static constexpr int ncolors = 6;
+	int colors[ncolors * 3] = {
+		0,6,90,
+		34,110,204,
+		151,214,245,
+		254,157,0,
+		51,2,47,
+		255,255,255
+	};
+	colorpass.push_back(Color(colors[0], colors[1], colors[2]));
+	const float steps = (float(iterations) - 2) / (float(ncolors) - 1);
+	int k = 0;
+	int j = 0;
+	for (int i = 1; i < ncolors; i++) {
+		k++;
+		int times = int(steps * k);
+		int actualIndex = (k - 1) * 3;
+		int nextIndex = k * 3;
+		assert(nextIndex < ncolors * 3); // checks if array out of range
+		float r = float(colors[actualIndex]);
+		float g = float(colors[actualIndex + 1]);
+		float b = float(colors[actualIndex + 2]);
+		float rdif = (colors[nextIndex] - colors[actualIndex]) / float(times - j);
+		float gdif = (colors[nextIndex + 1] - colors[actualIndex + 1]) / float(times - j);
+		float bdif = (colors[nextIndex + 2] - colors[actualIndex + 2]) / float(times - j);
+		for (j; j < times; j++) {
+			colorpass.push_back(Color(int(r += rdif), int(g += gdif), int(b += bdif)));
 		}
 	}
+	colorpass.push_back(Color(0, 0, 0));
 }
 
 void Plane::DrawCell(const Vec2 & topleft, const Vec2 & bottomright, Graphics & gfx, Color color) const
@@ -104,12 +75,12 @@ void Plane::DoFullIteration(Graphics & gfx) const
 			iteration.y = 2 * iteration.x * iteration.y + c.y;
 			iteration.x = xnew;
 			double result = iteration.x * iteration.x + iteration.y * iteration.y;
-			if (result >= 4.0f || p == iterations - 1) {
+			if (result > 4.0f || p == iterations - 1) {
 				break;
 			}
 			p++;
 		}
-
+		assert(p < colorpass.size()); // checks if vector out of range
 		DrawCell({ x * CellWidth, y * CellHeight },
 		{ x * CellWidth + CellWidth, y * CellHeight + CellHeight }, gfx, colorpass[p]);
 	}

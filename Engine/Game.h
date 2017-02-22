@@ -24,7 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Plane.h"
-#include <random>
+#include "Camera.h"
 
 class Game
 {
@@ -45,5 +45,6 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Plane plane;
+	Camera camera;
 	/********************************/
 };

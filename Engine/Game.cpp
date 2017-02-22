@@ -25,8 +25,8 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
-	//,plane(-0.14336753003524380, -0.14335308455294740, 1.0189070396112421, 1.0188925941289464)
+	gfx( wnd ),
+	camera(-2.05,2.05,2.05,-2.05)
 {	
 	
 }
@@ -41,18 +41,44 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	plane.Move(wnd.kbd);
+	if (wnd.kbd.KeyIsPressed(VK_UP)) {
+		camera.MoveUp();
+	}
+	else if (wnd.kbd.KeyIsPressed(VK_DOWN)) {
+		camera.MoveDown();
+	}
+	if (wnd.kbd.KeyIsPressed(VK_LEFT)) {
+		camera.MoveLeft();
+	}
+	else if (wnd.kbd.KeyIsPressed(VK_RIGHT)) {
+		camera.MoveRight();
+	}
+	if (wnd.kbd.KeyIsPressed('W')) {
+		camera.MoveFaster();
+	}
+	else if (wnd.kbd.KeyIsPressed('S')) {
+		camera.MoveSlower();
+	}
+	if (wnd.kbd.KeyIsPressed('Q')) {
+		plane.DecreaseIterations();
+	}
+	else if (wnd.kbd.KeyIsPressed('E')) {
+		plane.IncreaseIterations();
+	}
+	if (wnd.kbd.KeyIsPressed(VK_SPACE)) {
+		camera.Reset();
+		plane.Reset();
+	}
 	if (wnd.mouse.LeftIsPressed())
-		{
-		 	//const Vec2 pointerPos(float(wnd.mouse.GetPosX()), float(wnd.mouse.GetPosY()));
-			plane.ZoomIn();
-		}
+	{
+		camera.ZoomIn();
+	}
 	else if (wnd.mouse.RightIsPressed()) {
-		plane.ZoomOut();
+		camera.ZoomOut();
 	}
 }
 
 void Game::ComposeFrame()
 {
-	plane.DoFullIteration(gfx);
+	plane.DoFullIteration(gfx, camera);
 }

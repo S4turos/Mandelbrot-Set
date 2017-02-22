@@ -7,16 +7,6 @@ Plane::Plane()
 	CreateColors();
 }
 
-Plane::Plane(const double limitLeft, const double limitRight, const double limitTop, const double limitBottom)
-	:
-	limitLeft(limitLeft),
-	limitRight(limitRight),
-	limitTop(limitTop),
-	limitBottom(limitBottom)
-{
-	CreateColors();
-}
-
 void Plane::CreateColors()
 {
 	colorpass.clear();
@@ -57,20 +47,24 @@ void Plane::DrawCell(const Vec2 & topleft, const Vec2 & bottomright, Graphics & 
 	gfx.DrawRect(topleft, bottomright, color);
 }
 
-void Plane::DoFullIteration(Graphics & gfx) const
+void Plane::DoFullIteration(Graphics & gfx, Camera& camera) const
 {
-	const double difX = (limitRight - limitLeft) / double(gridsX);
-	const double difY = (limitTop - limitBottom) / double(gridsY);
+	const double left = camera.GetLeft();
+	const double right = camera.GetRight();
+	const double top = camera.GetTop();
+	const double bottom = camera.GetBottom();
+	const double difX = (right - left) / double(gridsX);
+	const double difY = (top - bottom) / double(gridsY);
 
 	for (int i = 0; i < grids; i++) {
 		int x = i % gridsX;
 		int y = i / gridsY;
-		Vec2 c(x * difX + limitLeft, -y * difY + limitTop);
+		Vec2 c(x * difX + left, -y * difY + top);
 		int p = 0;
 		Vec2 iteration(0.0f, 0.0f);
 		while (true) {
-			// Aquí debes hacer todos los cálculos para cada casilla
-			// p es cada pass
+			// here is where the result of every grid is calculated
+			// p is the number for every pass
 			double xnew = iteration.x * iteration.x - iteration.y * iteration.y + c.x;
 			iteration.y = 2 * iteration.x * iteration.y + c.y;
 			iteration.x = xnew;
@@ -86,117 +80,24 @@ void Plane::DoFullIteration(Graphics & gfx) const
 	}
 }
 
-void Plane::ZoomIn()
+void Plane::IncreaseIterations()
 {
-	const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
-	const double vel = levelzoom * speed;
-	limitTop -= vel;
-	limitRight -= vel;
-	limitLeft += vel;
-	limitBottom += vel;
-}
-
-void Plane::ZoomOut()
-{
-	const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
-	const double vel = levelzoom * speed;
-	limitTop += vel;
-	limitRight += vel;
-	limitLeft -= vel;
-	limitBottom -= vel;
-	if (limitTop > 2.0) {
-		limitTop = 2.0;
-	}
-	if (limitRight > 2.0) {
-		limitRight = 2.0;
-	}
-	if (limitLeft < -2.0) {
-		limitLeft = -2.0;
-	}
-	if (limitBottom < -2.0) {
-		limitBottom = -2.0;
-	}
-}
-
-void Plane::Move(Keyboard & kbd)
-{
-	if (kbd.KeyIsPressed(VK_LEFT)) {
-		const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
-		const double vel = levelzoom * speed;
-		limitLeft -= vel;
-		limitRight -= vel;
-	}
-	else if (kbd.KeyIsPressed(VK_RIGHT)) {
-		const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
-		const double vel = levelzoom * speed;
-		limitLeft += vel;
-		limitRight += vel;
-	}
-	if (kbd.KeyIsPressed(VK_DOWN)) {
-		const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
-		const double vel = levelzoom * speed;
-		limitTop -= vel;
-		limitBottom -= vel;
-	}
-	else if (kbd.KeyIsPressed(VK_UP)) {
-		const double levelzoom = limitTop - limitBottom + limitRight - limitLeft;
-		const double vel = levelzoom * speed;
-		limitTop += vel;
-		limitBottom += vel;
-	}
-	if (kbd.KeyIsPressed('Q')) {
-		if (iterations > 100) {
-			iterations -= 100;
-			CreateColors();
-		}
-	}
-	else if (kbd.KeyIsPressed('E')) {
-		if (iterations < 1000) {
-			iterations += 100;
-			CreateColors();
-		}
-	}
-	if (kbd.KeyIsPressed(VK_SPACE)) {
-		limitTop = 2.0;
-		limitBottom = -2.0;
-		limitLeft = -2.0;
-		limitRight = 2.0;
-		speed = 1.0 / 40.0;
-		iterations = 100;
+	if (iterations < 1000) {
+		iterations += 100;
 		CreateColors();
 	}
-	if (kbd.KeyIsPressed('W')) {
-		if (speed < 1.0 / 10.0) {
-			double denominador = 1.0 / speed;
-			denominador -= 10.0;
-			speed = 1.0 / denominador;
-		}
+}
+
+void Plane::DecreaseIterations()
+{
+	if (iterations > 100) {
+		iterations -= 100;
+		CreateColors();
 	}
-	else if (kbd.KeyIsPressed('S')) {
-		if (speed > 1.0 / 100.0) {
-			double denominador = 1.0 / speed;
-			denominador += 10.0;
-			speed = 1.0 / denominador;
-		}
-	}
-	if (limitLeft < -2.0) {
-		const double dif = -limitLeft - 2.0;
-		limitLeft += dif;
-		limitRight += dif;
-	}
-	if (limitRight > 2.0) {
-		const double dif = limitRight - 2.0;
-		limitLeft -= dif;
-		limitRight -= dif;
-	}
-	if (limitTop > 2.0) {
-		const double dif = limitTop - 2.0;
-		limitTop -= dif;
-		limitBottom -= dif;
-	}
-	if (limitBottom < -2.0) {
-		const double dif = -limitBottom - 2.0;
-		limitTop += dif;
-		limitBottom += dif;
-	}
+}
+
+void Plane::Reset()
+{
+	iterations = 100;
+	CreateColors();
 }

@@ -82,8 +82,8 @@ void Plane::DoFullIteration(Graphics & gfx, Camera& camera) const
 
 void Plane::IncreaseIterations()
 {
-	if (iterations < 1000) {
-		iterations += 100;
+	if (iterations < 1500) {
+		iterations += 50;
 		CreateColors();
 	}
 }
@@ -91,7 +91,7 @@ void Plane::IncreaseIterations()
 void Plane::DecreaseIterations()
 {
 	if (iterations > 100) {
-		iterations -= 100;
+		iterations -= 50;
 		CreateColors();
 	}
 }

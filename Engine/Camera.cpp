@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <assert.h>
 
 Camera::Camera(const double borderLeft, const double borderRight, const double borderTop, const double borderBottom)
 	:
@@ -61,7 +62,7 @@ void Camera::MoveDown()
 	}
 }
 
-void Camera::ZoomIn()
+void Camera::ZoomIn(const int gridsX, const int gridsY)
 {
 	const double levelzoom = GetZoom();
 	const double vel = levelzoom * speed;
@@ -69,6 +70,13 @@ void Camera::ZoomIn()
 	right -= vel;
 	left += vel;
 	bottom += vel;
+
+	if (top - bottom < double(gridsY) * 0.0000000000000001 || right - left < double(gridsX) * 0.0000000000000001) {
+		top += vel;
+		right += vel;
+		left -= vel;
+		bottom -= vel;
+	}
 }
 
 void Camera::ZoomOut()
@@ -79,18 +87,47 @@ void Camera::ZoomOut()
 	right += vel;
 	left -= vel;
 	bottom -= vel;
+
 	if (top > borderTop) {
 		top = borderTop;
+		const double height = top - bottom;
+		const double width = right - left;
+		bottom -= width - height;
+		if (bottom < borderBottom) {
+			bottom = borderBottom;
+		}
 	}
 	if (right > borderRight) {
 		right = borderRight;
+		const double height = top - bottom;
+		const double width = right - left;
+		left -= height - width;
+		if (left < borderLeft) {
+			left = borderLeft;
+		}
 	}
 	if (left < borderLeft) {
 		left = borderLeft;
+		const double height = top - bottom;
+		const double width = right - left;
+		right += height - width;
+		if (right > borderRight) {
+			right = borderRight;
+		}
 	}
 	if (bottom < borderBottom) {
 		bottom = borderBottom;
+		const double height = top - bottom;
+		const double width = right - left;
+		top += width - height;
+		if (top > borderTop) {
+			top = borderTop;
+		}
 	}
+	assert(left >= borderLeft);
+	assert(right <= borderRight);
+	assert(top <= borderTop);
+	assert(bottom >= borderBottom);
 }
 
 void Camera::MoveFaster()

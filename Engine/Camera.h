@@ -7,7 +7,7 @@ public:
 	void MoveRight();
 	void MoveUp();
 	void MoveDown();
-	void ZoomIn();
+	void ZoomIn(const int gridsX, const int gridsY);
 	void ZoomOut();
 	void MoveFaster();
 	void MoveSlower();

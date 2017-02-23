@@ -28,7 +28,7 @@ void Plane::CreateColors()
 		int times = int(steps * k);
 		int actualIndex = (k - 1) * 3;
 		int nextIndex = k * 3;
-		assert(nextIndex < ncolors * 3); // checks if array out of range
+		assert(nextIndex < ncolors * 3); // checks if the index of the array is out of range
 		float r = float(colors[actualIndex]);
 		float g = float(colors[actualIndex + 1]);
 		float b = float(colors[actualIndex + 2]);
@@ -64,7 +64,7 @@ void Plane::DoFullIteration(Graphics & gfx, Camera& camera) const
 		Vec2 iteration(0.0f, 0.0f);
 		while (true) {
 			// here is where the result of every grid is calculated
-			// p is the number for every pass
+			// p is the number for every pass or iteration
 			double xnew = iteration.x * iteration.x - iteration.y * iteration.y + c.x;
 			iteration.y = 2 * iteration.x * iteration.y + c.y;
 			iteration.x = xnew;
@@ -74,7 +74,7 @@ void Plane::DoFullIteration(Graphics & gfx, Camera& camera) const
 			}
 			p++;
 		}
-		assert(p < colorpass.size()); // checks if vector out of range
+		assert(p < colorpass.size()); // checks if the index of the vector is out of range
 		DrawCell({ x * CellWidth, y * CellHeight },
 		{ x * CellWidth + CellWidth, y * CellHeight + CellHeight }, gfx, colorpass[p]);
 	}

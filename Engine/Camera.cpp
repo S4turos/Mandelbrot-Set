@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "Graphics.h"
 #include <assert.h>
 
 Camera::Camera(const double borderLeft, const double borderRight, const double borderTop, const double borderBottom)
@@ -62,7 +63,7 @@ void Camera::MoveDown()
 	}
 }
 
-void Camera::ZoomIn(const int gridsX, const int gridsY)
+void Camera::ZoomIn()
 {
 	const double levelzoom = GetZoom();
 	const double vel = levelzoom * speed;
@@ -71,7 +72,8 @@ void Camera::ZoomIn(const int gridsX, const int gridsY)
 	left += vel;
 	bottom += vel;
 
-	if (top - bottom < double(gridsY) * 0.0000000000000001 || right - left < double(gridsX) * 0.0000000000000001) {
+	if (top - bottom < double(Graphics::ScreenHeight) * 0.0000000000000001 || 
+		right - left < double(Graphics::ScreenWidth) * 0.0000000000000001) {
 		top += vel;
 		right += vel;
 		left -= vel;

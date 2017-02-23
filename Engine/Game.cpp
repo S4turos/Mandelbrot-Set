@@ -71,7 +71,7 @@ void Game::UpdateModel()
 	}
 	if (wnd.mouse.LeftIsPressed())
 	{
-		camera.ZoomIn(plane.gridsX, plane.gridsY);
+		camera.ZoomIn();
 	}
 	else if (wnd.mouse.RightIsPressed()) {
 		camera.ZoomOut();

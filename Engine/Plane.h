@@ -16,11 +16,11 @@ public:
 	void IncreaseIterations();
 	void DecreaseIterations();
 	void Reset();
-	static constexpr int gridsX = 800;
-	static constexpr int gridsY = 800;
 private:
 	int iterations = 100;
 	std::vector<Color> colorpass;
+	static constexpr int gridsX = Graphics::ScreenWidth;
+	static constexpr int gridsY = Graphics::ScreenHeight;
 	static constexpr int grids = gridsX * gridsY;
 	static constexpr double CellWidth = double(Graphics::ScreenWidth) / double(gridsX);
 	static constexpr double CellHeight = double(Graphics::ScreenHeight) / double(gridsY);

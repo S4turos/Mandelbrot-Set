@@ -28,7 +28,6 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd ),
 	camera(-2.05,2.05,2.05,-2.05)
 {	
-	
 }
 
 void Game::Go()
